@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ありがとPay</title>
+<meta name="description" content="手数料0.5%、売上はすぐ残高へ、お客さまの「ありがとう」が届く。「行きつけのあそこ」のための、新しいスマホ決済のコンセプトです（開発中・提供前）。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* 色はアプリのデザイン第2版（柿色・山吹色）にそろえています */
+:root{
+  --kaki:#D85A30;        /* 主色 柿色 */
+  --kaki-deep:#712B13;   /* 残高・売上の帯 */
+  --kaki-soft:#FAECE7;   /* 手数料で応援の帯 */
+  --yamabuki:#EF9F27;    /* ありがとうの瞬間 */
+  --yamabuki-soft:#FAEEDA;
+  --line:#F1EFE8;        /* 区切り */
+  --bg:#FFFCF8;
+  --surface:#FFFFFF;
+  --ink:#2B2320;
+  --ink-sub:#6B5F59;
+  --in:#0F6E56;          /* 入るお金 */
+  --out:#A32D2D;         /* 出るお金 */
+  --radius:20px;
+  --maru:"Zen Maru Gothic","Noto Sans JP",sans-serif;
+  --sans:"Noto Sans JP",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.8;font-size:16px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--kaki)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--maru);line-height:1.4;margin:0}
+h2{font-size:clamp(26px,4.2vw,38px);font-weight:900;letter-spacing:.02em}
+h3{font-size:20px;font-weight:700}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{display:inline-block;font-family:var(--maru);font-weight:700;color:var(--kaki);font-size:14px;letter-spacing:.12em;margin-bottom:10px}
+.lead{color:var(--ink-sub);font-size:17px;max-width:720px}
+section{padding:88px 0}
+.sec-head{margin-bottom:40px}
+.sec-head .lead{margin-top:14px}
+
+/* ヘッダー */
+header.site{position:sticky;top:0;z-index:20;background:rgba(255,252,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--maru);font-weight:900;font-size:20px;white-space:nowrap}
+.logo small{font-weight:700;font-size:12px;color:var(--ink-sub);margin-left:2px}
+.logo-mark{width:34px;height:34px;border-radius:11px;background:var(--kaki);display:grid;place-items:center;flex:none}
+nav.links{display:flex;gap:22px;font-size:14px}
+nav.links a{color:var(--ink-sub);text-decoration:none}
+nav.links a:hover{color:var(--kaki)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--maru);font-weight:700;border-radius:999px;text-decoration:none;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn-main{background:var(--kaki);color:#fff;padding:14px 28px;font-size:17px;box-shadow:0 6px 18px rgba(216,90,48,.28)}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(216,90,48,.32)}
+.btn-small{background:var(--kaki);color:#fff;padding:8px 16px;font-size:14px;white-space:nowrap}
+@media (max-width:820px){nav.links{display:none}}
+
+/* 提供前の帯 */
+.notice{background:var(--yamabuki-soft);color:var(--kaki-deep);font-size:13px;text-align:center;padding:8px 16px}
+
+/* トップ */
+.hero{padding:56px 0 72px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(34px,6vw,58px);font-weight:900;letter-spacing:.01em}
+.hero h1 .hl{color:var(--kaki)}
+.hero p.sub{font-size:18px;color:var(--ink-sub);margin:20px 0 28px}
+
+/* 「手数料で応援」の札（柿色の塗りに白い文字・途中で改行しない） */
+.ouen-tag{display:inline-block;white-space:nowrap;background:var(--kaki);color:#fff;font-weight:700;border-radius:6px;padding:0 .45em;margin:0 .15em;line-height:1.6}
+
+/* ありがとPay とは（目指す未来の後に置く3つの札） */
+.what{margin-top:48px;text-align:center}
+.what h3{font-size:22px;margin:0 0 18px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:10px 22px;font-size:16px;font-weight:500}
+.chip b{color:var(--kaki);font-family:var(--maru);font-size:19px}
+@media (max-width:820px){.hero .wrap{grid-template-columns:1fr;gap:32px}.hero{padding:36px 0 56px}}
+
+/* 画像の枠（生成した画像が届くまでは、仮の枠を表示します） */
+.ph{position:relative;aspect-ratio:3/2;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,var(--yamabuki-soft),var(--kaki-soft))}
+.ph::after{content:attr(data-label);position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;color:var(--kaki-deep);font-family:var(--maru);font-weight:700;font-size:14px;opacity:.75}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.hero .ph{aspect-ratio:3/2;box-shadow:0 20px 50px rgba(113,43,19,.12)}
+
+/* 目指す未来 */
+.future{background:var(--surface)}
+.future .vision{font-family:var(--maru);font-weight:900;font-size:clamp(24px,3.6vw,34px);line-height:1.6;margin:0 0 18px}
+.future .vision em{font-style:normal;color:var(--kaki)}
+.story{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px;counter-reset:scene}
+.scene{background:var(--bg);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
+.scene .ph{border-radius:0}
+.scene .body{padding:22px 22px 26px}
+.scene .step{font-family:var(--maru);font-weight:700;font-size:13px;color:var(--kaki);letter-spacing:.08em}
+.scene h3{margin:6px 0 10px;font-size:21px}
+.scene p{margin:0;color:var(--ink-sub);font-size:15px}
+.scene .who{display:inline-block;margin-top:14px;font-size:13px;font-weight:700;border-radius:999px;padding:3px 12px}
+.who.shop{background:var(--yamabuki-soft);color:#8A5A0B}
+.who.guest{background:var(--kaki-soft);color:var(--kaki-deep)}
+.story-note{font-size:13px;color:var(--ink-sub);margin-top:16px}
+@media (max-width:820px){.story{grid-template-columns:1fr}}
+.cycle{margin-top:48px;display:grid;grid-template-columns:1fr 1.3fr;gap:36px;align-items:center;background:var(--bg);border-radius:var(--radius);padding:32px;border:1px solid var(--line)}
+.cycle svg{width:100%;height:auto;max-width:380px;margin:0 auto;display:block}
+.cycle h3{font-size:22px;margin-bottom:10px}
+.cycle p{margin:0;color:var(--ink-sub)}
+@media (max-width:820px){.cycle{grid-template-columns:1fr;padding:24px}}
+
+/* 困りごとと解決 */
+.pains{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pair{display:flex;flex-direction:column;gap:12px}
+.pain{background:#F6F3EE;border-radius:16px;padding:18px 20px;color:var(--ink-sub);font-size:15px}
+.pain b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+.arrow{text-align:center;color:var(--kaki);font-size:22px;line-height:1}
+.sol{background:var(--surface);border:2px solid var(--kaki);border-radius:var(--radius);padding:24px;flex:1}
+.sol .big{font-family:var(--maru);font-weight:900;color:var(--kaki);font-size:34px;line-height:1.2}
+.sol .big small{font-size:16px}
+.sol h3{margin:8px 0}
+.sol p{margin:0;color:var(--ink-sub);font-size:15px}
+@media (max-width:820px){.pains{grid-template-columns:1fr}}
+
+/* 手数料の比較 */
+.fees{background:var(--surface)}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--line)}
+table.cmp{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface)}
+table.cmp th,table.cmp td{padding:14px 16px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+table.cmp th:first-child,table.cmp td:first-child{text-align:left}
+table.cmp thead th{background:#F6F3EE;font-size:14px;font-weight:700}
+table.cmp thead th.us{background:var(--kaki);color:#fff}
+table.cmp td.us{background:var(--kaki-soft);color:var(--kaki-deep);font-weight:700}
+table.cmp tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:2px;background:#fff;color:var(--kaki-deep);border:1px solid #F0C9B8}
+.foot{font-size:13px;color:var(--ink-sub);margin-top:14px}
+.foot li{margin-bottom:4px}
+.calc{margin-top:40px;display:grid;grid-template-columns:1fr 1.2fr;gap:28px;background:var(--bg);border-radius:var(--radius);padding:32px;border:1px solid var(--line)}
+.calc h3{margin-bottom:6px}
+.calc label{display:block;font-size:14px;font-weight:700;margin:16px 0 6px}
+.calc .in{display:flex;align-items:center;gap:8px}
+.calc input{width:100%;font:inherit;font-size:18px;padding:10px 14px;border-radius:12px;border:1px solid #DDD6CC;background:#fff;text-align:right;font-variant-numeric:tabular-nums}
+.calc input:focus{outline:2px solid var(--kaki);border-color:transparent}
+.calc .unit{color:var(--ink-sub);white-space:nowrap}
+.rates{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result{display:flex;flex-direction:column;gap:12px}
+.bar-row{display:grid;grid-template-columns:118px 1fr auto;gap:10px;align-items:center;font-size:14px}
+.bar{height:18px;border-radius:6px;background:#E3DDD4;transition:width .3s}
+.bar.us{background:var(--kaki)}
+.bar-row .v{font-weight:700;min-width:96px;text-align:right}
+.save{margin-top:8px;background:var(--surface);border-radius:16px;padding:18px 20px;border:1px solid var(--line)}
+.save .big{font-family:var(--maru);font-weight:900;font-size:clamp(26px,4vw,34px);color:var(--in)}
+.save p{margin:2px 0 0;font-size:14px;color:var(--ink-sub)}
+@media (max-width:820px){.calc{grid-template-columns:1fr;padding:22px}.bar-row{grid-template-columns:96px 1fr auto}}
+
+/* 使い方とアプリの画面 */
+.how-grid{display:grid;grid-template-columns:1fr;gap:28px}
+.how-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);padding:32px 40px;display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:center}
+.how-card h3{font-size:22px;margin-bottom:4px}
+.how-card .for{font-size:13px;color:var(--ink-sub);margin-bottom:16px}
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding-left:40px;margin-bottom:16px;font-size:15px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--kaki);color:#fff;font-family:var(--maru);font-weight:700;display:grid;place-items:center;font-size:14px}
+ol.steps li b{display:block}
+ol.steps li span{color:var(--ink-sub);font-size:14px}
+ol.steps li span.ouen-tag{color:#fff}  /* 手順の説明文の灰色が、札の白い文字に効かないように */
+@media (max-width:640px){.how-card{grid-template-columns:1fr;padding:22px;gap:24px}}
+.support-note{margin-top:24px;background:var(--kaki-soft);border-radius:var(--radius);padding:22px 26px;display:flex;gap:16px;align-items:flex-start}
+.support-note p{margin:0;color:var(--kaki-deep)}
+.support-note b{font-family:var(--maru)}
+
+/* スマホの画面（HTML で描いた見本） */
+.phone{width:250px;max-width:100%;margin:0 auto;border-radius:34px;background:#1E1A18;padding:9px;box-shadow:0 18px 40px rgba(43,35,32,.18)}
+.screen{border-radius:26px;overflow:hidden;background:#fff;font-size:12px;line-height:1.5;color:var(--ink)}
+.status{display:flex;justify-content:space-between;padding:8px 16px 4px;font-size:10px;font-weight:700}
+.scr-pad{padding:6px 14px 14px}
+.scr-title{font-family:var(--maru);font-weight:700;font-size:13px;text-align:center;margin:2px 0 10px}
+.shop-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.shop-ic{width:28px;height:28px;border-radius:9px;background:var(--yamabuki-soft);display:grid;place-items:center;flex:none}
+.kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+.kv .num{font-weight:700}
+.ouen{display:flex;justify-content:space-between;align-items:center;background:var(--kaki-soft);color:var(--kaki-deep);border-radius:10px;padding:7px 9px;margin:8px 0;font-weight:700}
+.toggle{width:30px;height:17px;border-radius:999px;background:var(--kaki);position:relative;flex:none}
+.toggle::after{content:"";position:absolute;right:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#fff}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0 4px}
+.total .num{font-size:18px;font-weight:700}
+.stamps{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0 10px}
+.stamp{display:inline-flex;align-items:center;gap:3px;font-size:10px;border-radius:999px;padding:3px 7px;background:var(--yamabuki-soft);color:#7A4E08}
+.stamp.on{background:var(--yamabuki);color:#fff}
+.pay-btn{background:var(--kaki);color:#fff;border-radius:12px;text-align:center;padding:9px;font-family:var(--maru);font-weight:700;font-size:13px}
+.bio{font-size:9.5px;color:var(--ink-sub);text-align:center;margin:6px 0 0}
+.sales{background:var(--kaki-deep);color:#fff;padding:12px 14px 14px}
+.sales .lbl{font-size:10px;opacity:.85}
+.sales .num{font-size:22px;font-weight:700;font-family:var(--sans)}
+.sales .meta{display:flex;gap:10px;font-size:10px;opacity:.9;margin-top:4px}
+.newpay{margin:10px 12px;background:var(--yamabuki-soft);border-radius:12px;padding:10px 12px;border:1px solid #F3D9A8}
+.newpay .top{display:flex;justify-content:space-between;align-items:center}
+.newpay .amt{color:var(--in);font-weight:700;font-size:16px}
+.newpay .icons{display:flex;gap:4px;margin-top:4px}
+.mini-ic{width:22px;height:22px;border-radius:50%;background:var(--yamabuki);display:grid;place-items:center}
+.list{padding:0 12px 12px}
+.li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:11px}
+.li .p{color:var(--in);font-weight:700}
+.li .m{color:var(--out);font-weight:700}
+.qr-row{display:flex;gap:6px;padding:0 12px 14px}
+.qr-row div{flex:1;text-align:center;border-radius:10px;padding:7px 0;font-weight:700;font-size:11px}
+.qr-row .a{background:var(--kaki);color:#fff}
+.qr-row .b{background:#fff;border:1px solid var(--kaki);color:var(--kaki)}
+.mock-note{font-size:12px;color:var(--ink-sub);text-align:center;margin-top:10px}
+
+/* 仕組み */
+.how-it{background:var(--surface)}
+.mech{display:grid;grid-template-columns:1.25fr 1fr;gap:36px;align-items:center}
+.mech svg{width:100%;height:auto}
+.points{list-style:none;padding:0;margin:0}
+.points li{padding:14px 0 14px 34px;border-bottom:1px solid var(--line);position:relative;font-size:15px}
+.points li::before{content:"";position:absolute;left:4px;top:21px;width:14px;height:14px;border-radius:50%;background:var(--kaki-soft);border:3px solid var(--kaki)}
+.points li b{display:block;font-size:16px}
+.points li span{color:var(--ink-sub)}
+@media (max-width:820px){.mech{grid-template-columns:1fr}}
+
+/* よくある質問 */
+.faq{max-width:820px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;padding:0 22px}
+summary{cursor:pointer;list-style:none;padding:18px 28px 18px 0;font-weight:700;position:relative;font-size:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:0;top:12px;font-size:24px;color:var(--kaki);font-weight:400}
+details[open] summary::after{content:"−"}
+details .ans{padding:0 0 18px;color:var(--ink-sub);font-size:15px}
+details .ans p{margin:0 0 8px}
+.pending{display:inline-block;font-size:12px;font-weight:700;background:var(--yamabuki-soft);color:#8A5A0B;border-radius:6px;padding:1px 8px;margin-left:6px;vertical-align:1px}
+
+/* 今の状況 */
+.status-sec{background:var(--surface)}
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-top:16px}
+.tl{position:relative;padding:44px 10px 0;text-align:center}
+.tl::before{content:"";position:absolute;top:15px;left:0;right:0;height:4px;background:var(--line)}
+.tl.done::before{background:var(--kaki)}
+.tl .dot{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid #D9D2C8}
+.tl.done .dot{background:var(--kaki);border-color:var(--kaki)}
+.tl.now .dot{background:#fff;border-color:var(--kaki);box-shadow:0 0 0 6px var(--kaki-soft)}
+.tl b{display:block;font-family:var(--maru);font-size:15px}
+.tl span{font-size:13px;color:var(--ink-sub)}
+.tl .here{display:inline-block;margin-top:6px;font-size:11px;font-weight:700;background:var(--kaki);color:#fff;border-radius:999px;padding:1px 9px}
+@media (max-width:820px){
+  .timeline{grid-template-columns:1fr}
+  .tl{text-align:left;padding:0 0 22px 40px}
+  .tl::before{top:0;bottom:0;left:13px;right:auto;width:4px;height:auto}
+  .tl .dot{top:0;left:13px}
+}
+.open-items{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.open-items div{background:var(--bg);border:1px dashed #E2C9A3;border-radius:16px;padding:18px 20px;font-size:14px;color:var(--ink-sub)}
+.open-items b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+@media (max-width:820px){.open-items{grid-template-columns:1fr}}
+
+/* 呼びかけ */
+.cta{background:var(--kaki-deep);color:#fff;text-align:center;border-radius:32px;padding:64px 24px;margin:0 20px}
+.cta h2{color:#fff}
+.cta p{color:#F6DCD1;max-width:640px;margin:16px auto 30px}
+.cta .btn-main{background:var(--yamabuki);color:#3A2405;box-shadow:none;font-size:18px;padding:16px 34px}
+.cta-wrap{max-width:1080px;margin:0 auto;padding:0 0 88px}
+@media (max-width:560px){.cta{margin:0 12px;padding:48px 20px}}
+
+footer{border-top:1px solid var(--line);padding:32px 0 48px;font-size:13px;color:var(--ink-sub)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+footer p{margin:0}
+</style>
+</head>
+<body>
+
+<div class="notice">これは開発中のサービスのコンセプトです。まだ提供していません。手数料などの数字は案で、変わることがあります。</div>
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="ありがとPay">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.5 3 5 6.4 5c2 0 3.4 1.1 4.2 2.4h2.8C14.2 6.1 15.6 5 17.6 5 21 5 23.1 8.5 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>
+      </span>
+      ありがとPay
+    </a>
+    <nav class="links" aria-label="ページ内のリンク">
+      <a href="#future">目指す未来</a>
+      <a href="#value">できること</a>
+      <a href="#fees">手数料</a>
+      <a href="#how">使い方</a>
+      <a href="#faq">よくある質問</a>
+    </nav>
+    <a class="btn btn-small" href="comment.html">ご意見を送る</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- トップ -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">「行きつけのあそこ」のための、スマホ決済</span>
+      <h1>「ありがとう」が<br><span class="hl">めぐる</span>お店へ。</h1>
+      <p class="sub">なじみのお店が、これからもずっと、私たちに幸せを届け続けられるように。手数料をぐっと抑えて、お客さまの「ありがとう」がちゃんと届く決済をつくっています。</p>
+      <a class="btn btn-main" href="#future">コンセプトを見る</a>
+    </div>
+    <div class="ph" data-label="画像：商店街の小さな定食屋（生成待ち）">
+      <img src="images/hero.jpg" alt="夕方の商店街にある、のれんのかかった小さな定食屋" onerror="this.remove()">
+    </div>
+  </div>
+</section>
+
+<!-- 目指す未来 -->
+<section class="future" id="future">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">目指す未来</span>
+      <p class="vision">「ありがとう」の連鎖で、<br><em>「行きつけ」</em>の幸せをずっと。</p>
+      <p class="lead">お店が求めるのは利益ばかりじゃない。誰でも一度は、店長の「ありがとう」のサービスを受け取ったことがあるのではないでしょうか？ ありがとPayはその「ありがとう」にお客さまからお返しできる道を作る新しい決済アプリです。</p>
+    </div>
+
+    <div class="story">
+      <article class="scene">
+        <div class="ph" data-label="画像：学生に大盛りを出す店主（生成待ち）">
+          <img src="images/story1.jpg" alt="定食屋のカウンターで、店主が学生に大盛りのご飯を笑顔で出している" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <span class="step">場面 1　学生のころ</span>
+          <h3>「大盛りにしとくね」</h3>
+          <p>お金のなかった学生時代。あのお店は、もうけが少なくても、いつも学割で大盛りにしてくれた。</p>
+          <span class="who shop">お店 → お客さまへの「ありがとう」</span>
+        </div>
+      </article>
+      <article class="scene">
+        <div class="ph" data-label="画像：社会人になって同じ店で支払う（生成待ち）">
+          <img src="images/story2.jpg" alt="スーツ姿の若者が同じ店でスマホで支払い、店主とほほえみ合う" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <span class="step">場面 2　社会人になって</span>
+          <h3>「今度は、ぼくから」</h3>
+          <p>久しぶりに、のれんをくぐる。お会計で<span class="ouen-tag">手数料で応援</span>をオンに。手数料は自分が持ち、お店には満額が届く。</p>
+          <span class="who guest">お客さま → お店への「ありがとう」のお返し</span>
+        </div>
+      </article>
+      <article class="scene">
+        <div class="ph" data-label="画像：また次の学生に大盛りを出す（生成待ち）">
+          <img src="images/story3.jpg" alt="店主が別の学生たちに大盛りを出している。壁には古い写真" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <span class="step">場面 3　そして、また</span>
+          <h3>「また、次の誰かへ」</h3>
+          <p>届いた応援と、浮いた手数料が、また次の学生の大盛りになる。ありがとうが、町をめぐっていく。</p>
+          <span class="who shop">お店 → 次のお客さまへ</span>
+        </div>
+      </article>
+    </div>
+    <p class="story-note">※ 物語は、ありがとPay が目指す姿を伝えるための「たとえ」です。</p>
+
+    <div class="cycle">
+      <svg viewBox="0 0 360 400" role="img" aria-label="お店からお客さまへサービスの「ありがとう」、お客さまからお店へ応援とひとことの「ありがとう」がめぐる図。手数料で応援では、お会計1,000円に手数料5円をお客さまが上乗せして1,005円を払い、お店には1,000円が満額届く">
+        <defs>
+          <marker id="ah1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#EF9F27"/></marker>
+          <marker id="ah2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D85A30"/></marker>
+        </defs>
+        <path d="M95 92 C 140 20, 220 20, 265 92" fill="none" stroke="#EF9F27" stroke-width="5" stroke-linecap="round" marker-end="url(#ah1)"/>
+        <path d="M265 168 C 220 240, 140 240, 95 168" fill="none" stroke="#D85A30" stroke-width="5" stroke-linecap="round" marker-end="url(#ah2)"/>
+        <circle cx="62" cy="130" r="48" fill="#FAEEDA"/>
+        <circle cx="298" cy="130" r="48" fill="#FAECE7"/>
+        <text x="62" y="126" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-weight="700" font-size="18" fill="#712B13">お店</text>
+        <text x="62" y="148" text-anchor="middle" font-family="Noto Sans JP, sans-serif" font-size="11" fill="#6B5F59">なじみの味</text>
+        <text x="298" y="126" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-weight="700" font-size="17" fill="#712B13">お客さま</text>
+        <text x="298" y="148" text-anchor="middle" font-family="Noto Sans JP, sans-serif" font-size="11" fill="#6B5F59">町の人</text>
+        <text x="180" y="36" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-weight="700" font-size="14" fill="#8A5A0B">大盛り・おまけ・いい時間</text>
+        <!-- 下の矢印のラベル：「手数料で応援」は柿色の塗りに白い文字 -->
+        <rect x="104" y="224" width="100" height="22" rx="5" fill="#D85A30"/>
+        <text x="154" y="240" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-weight="700" font-size="14" fill="#fff">手数料で応援</text>
+        <text x="208" y="240" font-family="Zen Maru Gothic, sans-serif" font-weight="700" font-size="14" fill="#712B13">・ひとこと</text>
+        <!-- レシート：手数料が上乗せされることを示す -->
+        <line x1="154" y1="247" x2="154" y2="262" stroke="#D85A30" stroke-width="2" stroke-dasharray="3 3"/>
+        <path d="M66 262 H294 V384 l-9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 -9.5 7 -9.5 -7 Z" fill="#fff" stroke="#E6DFD6" stroke-width="1.5"/>
+        <g font-family="Noto Sans JP, sans-serif" font-size="12.5" fill="#2B2320">
+          <text x="80" y="284">お会計</text>
+          <text x="280" y="284" text-anchor="end">1,000円</text>
+          <rect x="74" y="292" width="212" height="22" rx="5" fill="#D85A30"/>
+          <text x="80" y="307" fill="#fff" font-weight="700">＋ 手数料で応援</text>
+          <text x="280" y="307" text-anchor="end" fill="#fff" font-weight="700">5円</text>
+          <line x1="80" y1="322" x2="280" y2="322" stroke="#2B2320" stroke-width="1"/>
+          <text x="80" y="339" font-weight="700">お支払い</text>
+          <text x="280" y="339" text-anchor="end" font-weight="700">1,005円</text>
+          <text x="180" y="358" text-anchor="middle" font-size="11" fill="#6B5F59">お店の手数料を、お客さまが代わりに。</text>
+          <text x="180" y="374" text-anchor="middle" font-size="11" fill="#6B5F59">お店には 1,000円が満額届きます</text>
+        </g>
+        <text x="180" y="134" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-weight="900" font-size="20" fill="#D85A30">ありがとう</text>
+      </svg>
+      <div>
+        <h3>決済を、「ありがとう」の通り道に</h3>
+        <p>お店のサービスは、お客さまへの「ありがとう」。お客さまの応援とひとことは、お店への「ありがとう」。ありがとPay は、その両方が行き来する通り道になります。手数料が小さいほど、お店の手元に残るぶんが、次のお客さまへのサービスに回ります。</p>
+      </div>
+    </div>
+
+    <div class="what">
+      <h3>ありがとPay は、こんな決済です</h3>
+      <div class="chips">
+        <span class="chip">手数料 <b class="num">0.5%</b>（上限100円）</span>
+        <span class="chip">売上は <b>すぐ</b> 残高へ</span>
+        <span class="chip">お客さまの <b>ありがとう</b> が届く</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 困りごとと解決 -->
+<section id="value">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">お店にできること</span>
+      <h2>キャッシュレスの「困った」を、3つ軽くします</h2>
+    </div>
+    <div class="pains">
+      <div class="pair">
+        <div class="pain"><b>手数料が重い</b>カードは2〜3%台、コード決済も2%前後。薄い利益から毎回引かれます。</div>
+        <div class="arrow" aria-hidden="true">▼</div>
+        <div class="sol">
+          <div class="big num">0.5<small>%</small></div>
+          <h3>手数料を、ぐっと小さく</h3>
+          <p>お会計の0.5%。1回の下限は5円、上限は100円です。2万円を超えるお会計でも100円で止まります。</p>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="pain"><b>入金まで待つ</b>締め日から支払日まで、売上が手元に届くのに数週間かかることも。</div>
+        <div class="arrow" aria-hidden="true">▼</div>
+        <div class="sol">
+          <div class="big">すぐ</div>
+          <h3>売上は、支払いと同時に残高へ</h3>
+          <p>お客さまが払った瞬間に、お店の残高に入ります。銀行口座への出金は、JPYC 社の「JPYC EX」で、お好きなときにできます。</p>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="pain"><b>気持ちが見えにくい</b>レジは速くなったけれど、「ごちそうさま」が届きにくくなりました。</div>
+        <div class="arrow" aria-hidden="true">▼</div>
+        <div class="sol">
+          <div class="big">ありがとう</div>
+          <h3>お客さまの気持ちが届く</h3>
+          <p>お客さまは支払いの際に<span class="ouen-tag">手数料で応援</span>でき、「ごちそうさま」などのひとことスタンプを押すこともできます。お店のアプリに、そのまま届きます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 手数料の比較 -->
+<section class="fees" id="fees">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">手数料の比較</span>
+      <h2>1回のお会計で、お店が払う手数料</h2>
+      <p class="lead">よく見られる料率の一例と比べました。お会計が大きいほど、差が大きくなります。</p>
+    </div>
+    <div class="table-wrap">
+      <table class="cmp num">
+        <thead>
+          <tr><th>お会計</th><th class="us">ありがとPay</th><th>コード決済（1.98%の例）</th><th>クレジットカード（3.24%の例）</th></tr>
+        </thead>
+        <tbody id="fee-rows"></tbody>
+      </table>
+    </div>
+    <ul class="foot">
+      <li>ありがとPay の手数料は、お会計の0.5%（1円未満切り捨て）、1回の下限5円・上限100円です（案）。消費税の扱いは検討中です。</li>
+      <li>お会計がおよそ250円より少ないときは、下限の5円のため、コード決済より高くなることがあります。</li>
+      <li>コード決済・カードの料率は、2026年11月時点で公開されている料率の一例（税別）です。実際の料率は、契約・業種・プランで変わります。</li>
+      <li>お客さまが<span class="ouen-tag">手数料で応援</span>を選んだお支払いでは、お店の手数料は0円です（お店には満額が届きます）。</li>
+    </ul>
+
+    <div class="calc" id="calc">
+      <div>
+        <h3>お店の数字で、試算してみる</h3>
+        <p class="foot" style="margin-top:0">応援が無いとして計算します。料率は今のご契約に合わせて変えられます。</p>
+        <label for="sales">月のキャッシュレスの売上</label>
+        <div class="in"><input id="sales" type="text" inputmode="numeric" value="1,000,000"><span class="unit">円</span></div>
+        <label for="avg">1回の平均のお会計</label>
+        <div class="in"><input id="avg" type="text" inputmode="numeric" value="1,500"><span class="unit">円</span></div>
+        <div class="rates">
+          <div><label for="r-code">コード決済の料率</label><div class="in"><input id="r-code" type="text" inputmode="decimal" value="1.98"><span class="unit">%</span></div></div>
+          <div><label for="r-card">カードの料率</label><div class="in"><input id="r-card" type="text" inputmode="decimal" value="3.24"><span class="unit">%</span></div></div>
+        </div>
+      </div>
+      <div class="result" aria-live="polite">
+        <div class="bar-row"><span>ありがとPay</span><div><div class="bar us" id="b-us"></div></div><span class="v num" id="v-us"></span></div>
+        <div class="bar-row"><span>コード決済</span><div><div class="bar" id="b-code"></div></div><span class="v num" id="v-code"></span></div>
+        <div class="bar-row"><span>クレジットカード</span><div><div class="bar" id="b-card"></div></div><span class="v num" id="v-card"></span></div>
+        <div class="save">
+          <p>カードと比べて、1年で</p>
+          <div class="big num" id="save-card"></div>
+          <p id="save-code"></p>
+        </div>
+        <p class="foot" id="calc-msg" style="margin:0"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 使い方とアプリの画面 -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">使い方</span>
+      <h2>いつもの QR 決済と、同じ手軽さで</h2>
+      <p class="lead">アプリは2つ。お客さま用の「ありがとPay」と、お店用の「ありがとPay for Business」です。</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div>
+          <h3>お客さま</h3>
+          <p class="for">アプリ「ありがとPay」</p>
+          <ol class="steps">
+            <li><b>お店の QR を読む</b><span>レジの QR か、お店の画面の QR を読みます。</span></li>
+            <li><b>応援とひとことを選ぶ</b><span><span class="ouen-tag">手数料で応援</span>とスタンプは、どちらも気持ちしだいです。</span></li>
+            <li><b>指紋や顔で確かめて払う</b><span>完了画面はレシートの形。届けたありがとうも残ります。</span></li>
+          </ol>
+        </div>
+        <div>
+          <div class="phone" role="img" aria-label="お客さまのアプリの、支払いの確認画面の見本">
+            <div class="screen">
+              <div class="status"><span>12:30</span><span>●●●</span></div>
+              <div class="scr-pad">
+                <div class="scr-title">お支払いの確認</div>
+                <div class="shop-row">
+                  <span class="shop-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B8730E" stroke-width="2" stroke-linecap="round"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"/></svg></span>
+                  <div><b>定食のさくら屋</b><div style="color:var(--ink-sub);font-size:10px">見本の店名です</div></div>
+                </div>
+                <div class="kv"><span>お会計</span><span class="num">1,200円</span></div>
+                <div class="ouen"><span>♥ 手数料で応援 <span class="num">+6円</span></span><span class="toggle" aria-hidden="true"></span></div>
+                <div class="total"><span>お支払い</span><span class="num">1,206円</span></div>
+                <div style="font-size:10px;color:var(--ink-sub)">ひとこと</div>
+                <div class="stamps">
+                  <span class="stamp">♥ ありがとう</span><span class="stamp on">ごちそうさま</span><span class="stamp">また来ます</span><span class="stamp">おいしかった</span>
+                </div>
+                <div class="pay-btn num">1,206円を払う</div>
+                <p class="bio">指紋・顔・画面ロックで確認してから払います</p>
+              </div>
+            </div>
+          </div>
+          <p class="mock-note">画面は開発中の見本です</p>
+        </div>
+      </div>
+
+      <div class="how-card">
+        <div>
+          <h3>お店</h3>
+          <p class="for">アプリ「ありがとPay for Business」</p>
+          <ol class="steps">
+            <li><b>QR を出す</b><span>印刷した QR をレジに置くか、金額を入れて画面に出します。</span></li>
+            <li><b>入金とありがとうが、すぐ届く</b><span>今日の売上・応援の数・届いたスタンプが一目で分かります。</span></li>
+            <li><b>好きなときに出金</b><span>残高は、JPYC 社の「JPYC EX」で銀行口座へ出金できます。</span></li>
+          </ol>
+          <p class="foot" style="margin-top:0">スタッフの端末は招待コードで追加でき、QR を出す・入金を見るだけにできます。返金はオーナーの端末だけです。</p>
+        </div>
+        <div>
+          <div class="phone" role="img" aria-label="お店のアプリの、今日の売上の画面の見本">
+            <div class="screen">
+              <div class="status" style="background:var(--kaki-deep);color:#fff"><span>18:05</span><span>●●●</span></div>
+              <div class="sales">
+                <div class="lbl">今日の売上</div>
+                <div class="num">48,300円</div>
+                <div class="meta"><span>32件</span><span>返金 0件</span><span>♥ ありがとう 9件</span></div>
+              </div>
+              <div class="newpay">
+                <div class="top"><span style="font-size:10px;color:#8A5A0B;font-weight:700">いま届いた入金</span><span class="amt num">+1,200円</span></div>
+                <div class="icons">
+                  <span class="mini-ic" title="手数料で応援"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.5 3 5 6.4 5c2 0 3.4 1.1 4.2 2.4h2.8C14.2 6.1 15.6 5 17.6 5 21 5 23.1 8.5 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg></span>
+                  <span class="mini-ic" title="ごちそうさま"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"/></svg></span>
+                </div>
+              </div>
+              <div class="list">
+                <div class="li"><span>12:31 定食</span><span class="p num">+1,200</span></div>
+                <div class="li"><span>12:18 定食・大盛り</span><span class="p num">+950</span></div>
+                <div class="li"><span>12:02 返金</span><span class="m num">-300</span></div>
+                <div class="li"><span>11:47 定食</span><span class="p num">+1,100</span></div>
+              </div>
+              <div class="qr-row"><div class="a">金額を入れて QR</div><div class="b">固定 QR</div></div>
+            </div>
+          </div>
+          <p class="mock-note">画面は開発中の見本です</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="support-note">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="#D85A30" aria-hidden="true" style="flex:none"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.5 3 5 6.4 5c2 0 3.4 1.1 4.2 2.4h2.8C14.2 6.1 15.6 5 17.6 5 21 5 23.1 8.5 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>
+      <p><b><span class="ouen-tag">手数料で応援</span>は、お客さまの気持ちだけで決まります。</b><br>お店からお願いしたり、応援の有り無しでお客さまを分けたりする必要はありません。応援が無くても、手数料は0.5%です。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 仕組み -->
+<section class="how-it" id="mechanism">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">なぜ安いの？</span>
+      <h2>円建ての「JPYC」で、お店へ直接届けます</h2>
+      <p class="lead">支払いには、JPYC株式会社（資金移動業者）が発行する、円建ての電子決済手段（ステーブルコイン）「JPYC」を使います。1JPYC＝1円で発行され、1円として円に換えられます。間に入る会社が少ないぶん、手数料を小さくできます。お店のアプリでは、売上も残高も「円」で表示します。</p>
+    </div>
+    <div class="mech">
+      <svg viewBox="0 0 520 300" role="img" aria-label="お客さまの JPYC ウォレットからお店の JPYC ウォレットへ直接お金が届き、運営は送金を中継してネットワークの手数料を払うだけ、出金は JPYC 社の JPYC EX で銀行口座へ、という図">
+        <defs><marker id="m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D85A30"/></marker>
+        <marker id="m2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9A8E86"/></marker></defs>
+        <rect x="10" y="40" width="130" height="78" rx="16" fill="#FAECE7"/>
+        <text x="75" y="74" text-anchor="middle" font-family="Zen Maru Gothic,sans-serif" font-weight="700" font-size="16" fill="#712B13">お客さま</text>
+        <text x="75" y="96" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="#6B5F59">JPYC ウォレット</text>
+        <rect x="380" y="40" width="130" height="78" rx="16" fill="#FAEEDA"/>
+        <text x="445" y="74" text-anchor="middle" font-family="Zen Maru Gothic,sans-serif" font-weight="700" font-size="16" fill="#712B13">お店</text>
+        <text x="445" y="96" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="#6B5F59">JPYC ウォレット</text>
+        <line x1="146" y1="79" x2="372" y2="79" stroke="#D85A30" stroke-width="4" marker-end="url(#m1)"/>
+        <text x="259" y="66" text-anchor="middle" font-family="Zen Maru Gothic,sans-serif" font-weight="700" font-size="13" fill="#D85A30">お金は直接お店へ</text>
+        <rect x="185" y="150" width="148" height="66" rx="14" fill="#fff" stroke="#E6DFD6" stroke-width="2"/>
+        <text x="259" y="178" text-anchor="middle" font-family="Zen Maru Gothic,sans-serif" font-weight="700" font-size="14" fill="#2B2320">ありがとPay</text>
+        <text x="259" y="198" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="#6B5F59">送金を中継・手数料を負担</text>
+        <line x1="259" y1="148" x2="259" y2="90" stroke="#9A8E86" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#m2)"/>
+        <rect x="380" y="200" width="130" height="78" rx="16" fill="#F6F3EE"/>
+        <text x="445" y="232" text-anchor="middle" font-family="Zen Maru Gothic,sans-serif" font-weight="700" font-size="14" fill="#2B2320">銀行口座</text>
+        <text x="445" y="254" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="#6B5F59">JPYC EX で円に</text>
+        <line x1="445" y1="122" x2="445" y2="194" stroke="#D85A30" stroke-width="3" marker-end="url(#m1)"/>
+        <text x="453" y="166" font-family="Noto Sans JP,sans-serif" font-size="11" fill="#6B5F59">出金</text>
+      </svg>
+      <ul class="points">
+        <li><b>運営は、お金を預かりません</b><span>お金は、お客さまの JPYC ウォレットからお店の JPYC ウォレットへ直接届きます。ウォレットの鍵は、それぞれのスマホの中にあります。</span></li>
+        <li><b>ネットワークの手数料は、運営が払います</b><span>送金のたびにかかる小さな手数料（ガス代）は、運営が持ちます。お店とお客さまは気にしなくて大丈夫です。</span></li>
+        <li><b>入金と出金は、JPYC 社の「JPYC EX」で</b><span>JPYC のチャージ（入金）と、円に換えて銀行口座へ戻す出金は、JPYC 社の「JPYC EX」で行います。ありがとPay は、支払いを担当します。</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- よくある質問 -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">よくある質問</span>
+      <h2>気になるところに、正直にお答えします</h2>
+      <p class="lead">まだ決まっていないことは「検討中」と書いています。</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>出金に手数料はかかりますか？</summary>
+        <div class="ans">
+          <p>ありがとPay は、出金の手数料をいただきません。出金は JPYC 社の「JPYC EX」で行うため、出金の手数料や1回に出金できる金額は、JPYC 社の決まりに準じます。</p>
+        </div>
+      </details>
+      <details>
+        <summary>出金すると、いつ口座に届きますか？</summary>
+        <div class="ans"><p>JPYC 社の決まりに準じます。JPYC 社の説明では、原則として手続きを受け付けてすぐに処理されます。ただし、不正を防ぐ確認のため、翌営業日までかかることがあります。</p></div>
+      </details>
+      <details>
+        <summary>お店は何を用意すればよいですか？</summary>
+        <div class="ans"><p>お店用のアプリと、出金に使う JPYC EX のアカウント（法人または個人。マイナンバーカードなどでの本人確認があります）、出金先の銀行口座です。お店の登録には、運営の審査を設ける予定です。</p></div>
+      </details>
+      <details>
+        <summary>お客さまの準備は大変ではありませんか？<span class="pending">検討中</span></summary>
+        <div class="ans">
+          <p>正直に言うと、今は普通の決済アプリより一手間多くなります。お客さまは JPYC 社の「JPYC EX」への登録（マイナンバーカードでの本人確認）と、JPYC EX での銀行振込によるチャージが必要です。</p>
+          <p>この手間を軽くする方法を、JPYC 社と相談しながら検討しています。</p>
+        </div>
+      </details>
+      <details>
+        <summary>返金はできますか？</summary>
+        <div class="ans"><p>全額でも一部でも返金できます。返金はオーナーの端末から行います。返金1回ごとに、手数料の下限分の5円をお店にご負担いただく案です。</p></div>
+      </details>
+      <details>
+        <summary>JPYC の価値は変わりませんか？</summary>
+        <div class="ans"><p>JPYC は円建てで、1JPYC＝1円で発行され、1円として円に換えられます（償還）。発行会社の破綻などのリスクについては、JPYC 社の説明書に書かれています。</p></div>
+      </details>
+      <details>
+        <summary>法律の面は大丈夫ですか？<span class="pending">確認中</span></summary>
+        <div class="ans"><p>運営はお金を預からず、鍵も持たない形で設計しています。送金の中継や手数料の受け取り方が法律上どう扱われるかは、提供を始める前に、弁護士と JPYC 社に確認します。</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 今の状況 -->
+<section class="status-sec" id="status">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">今の状況</span>
+      <h2>開発中です。まだ提供していません</h2>
+      <p class="lead">アプリの試作ができ、お客さまとお店のアプリで、支払い・応援・ひとこと・返金が一通り動くところまで来ました。</p>
+    </div>
+    <div class="timeline">
+      <div class="tl done"><span class="dot"></span><b>アプリの試作</b><span>お客さま用・お店用の2つ</span></div>
+      <div class="tl now"><span class="dot"></span><b>前提の確認</b><span>JPYC 社・弁護士への確認</span><br><span class="here">いまここ</span></div>
+      <div class="tl"><span class="dot"></span><b>試験用の環境で検証</b><span>本番に近い形で動かす</span></div>
+      <div class="tl"><span class="dot"></span><b>JPYC EX とつなぐ</b><span>チャージ・出金の連携</span></div>
+      <div class="tl"><span class="dot"></span><b>数店舗で試験運用</b><span>限られたお店で小さく始める</span></div>
+    </div>
+    <div class="open-items">
+      <div><b>手数料の数字</b>0.5%・下限5円・上限100円は案です。消費税の扱いも含めて検討中です。</div>
+      <div><b>お客さまの始めやすさ</b>登録とチャージの手間を軽くする方法を検討中です。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 呼びかけ -->
+<section style="padding-top:88px;padding-bottom:0">
+  <div class="cta-wrap">
+    <div class="cta">
+      <h2>このコンセプトに、ご意見をください</h2>
+      <p>「いいね」も、「ここが心配」も、「これはどうなるの？」も、どれも大歓迎です。いただいた声は開発チームだけが読み、これからの設計に生かします。</p>
+      <a class="btn btn-main" href="comment.html">ご意見・ご質問を送る</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>ありがとPay 開発チーム</p>
+    <p>JPYC は JPYC株式会社が発行する電子決済手段です。このサイトは JPYC株式会社のサイトではありません。</p>
+  </div>
+</footer>
+
+<script>
+// 手数料の決まり（案）：0.5%（1円未満切り捨て）、下限5円・上限100円
+const RATE = 0.005, MIN_FEE = 5, MAX_FEE = 100;
+const fee = amount => Math.min(MAX_FEE, Math.max(MIN_FEE, Math.floor(amount * RATE)));
+const yen = n => Math.round(n).toLocaleString('ja-JP') + '円';
+
+// 比較の表
+const examples = [300, 1000, 1500, 5000, 10000, 30000];
+document.getElementById('fee-rows').innerHTML = examples.map(a => {
+  const f = fee(a);
+  const note = f === MIN_FEE && a * RATE < MIN_FEE ? '<span class="tag">下限</span>' : (f === MAX_FEE && a * RATE > MAX_FEE ? '<span class="tag">上限</span>' : '');
+  return `<tr><td>${yen(a)}</td><td class="us">${yen(f)}${note}</td><td>約${yen(a * 0.0198)}</td><td>約${yen(a * 0.0324)}</td></tr>`;
+}).join('');
+
+// 試算
+const $ = id => document.getElementById(id);
+const parse = el => Number(String(el.value).replace(/[,，\s円%]/g, ''));
+function calc() {
+  const sales = parse($('sales')), avg = parse($('avg'));
+  const rCode = parse($('r-code')) / 100, rCard = parse($('r-card')) / 100;
+  const ok = [sales, avg, rCode, rCard].every(v => Number.isFinite(v) && v >= 0) && sales > 0 && avg > 0;
+  if (!ok) {
+    $('calc-msg').textContent = '数字を正しく入れてください（売上とお会計は0より大きい数）。';
+    ['us','code','card'].forEach(k => { $('v-' + k).textContent = '—'; $('b-' + k).style.width = '0'; });
+    $('save-card').textContent = '—'; $('save-code').textContent = '';
+    return;
+  }
+  $('calc-msg').textContent = `月におよそ ${Math.round(sales / avg).toLocaleString('ja-JP')} 回のお会計として計算しています。`;
+  const us = (sales / avg) * fee(avg), code = sales * rCode, card = sales * rCard;
+  const max = Math.max(us, code, card) || 1;
+  [['us', us], ['code', code], ['card', card]].forEach(([k, v]) => {
+    $('v-' + k).textContent = '月 ' + yen(v);
+    $('b-' + k).style.width = (v / max * 100) + '%';
+  });
+  const sCard = (card - us) * 12, sCode = (code - us) * 12;
+  $('save-card').textContent = sCard >= 0 ? yen(sCard) + ' 少なく' : yen(-sCard) + ' 多く';
+  $('save-code').textContent = 'コード決済と比べると、1年で ' + (sCode >= 0 ? yen(sCode) + ' 少なくなります。' : yen(-sCode) + ' 多くなります。');
+}
+['sales', 'avg', 'r-code', 'r-card'].forEach(id => $(id).addEventListener('input', calc));
+calc();
+</script>
+</body>
+</html>
