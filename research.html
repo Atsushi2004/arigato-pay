@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>外部環境調査 | ありがとPay</title>
+<meta name="description" content="ありがとPay の事業判断のための外部環境調査（2026-11-19 時点）。既存の決済との比較、JPYC 関連のサービスとの比較、市場規模。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --kaki:#D85A30;--kaki-deep:#712B13;--kaki-soft:#FAECE7;
+  --yamabuki-soft:#FAEEDA;
+  --line:#ECE8E0;--bg:#FFFCF8;--surface:#FFFFFF;--ink:#2B2320;--ink-sub:#6B5F59;--ink-muted:#958982;
+  --warn-bg:#FFF4F2;--warn-line:#E9B4A6;--out:#A32D2D;
+  --good-bg:#EEF6EE;--good-ink:#25632A;
+  --grid:#ECE8E0;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;
+  --maru:"Zen Maru Gothic","Noto Sans JP",sans-serif;--sans:"Noto Sans JP",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --kaki:#E8774F;--kaki-deep:#F3B9A3;--kaki-soft:#3A2620;--yamabuki-soft:#3A3020;
+    --line:#38322E;--bg:#1A1716;--surface:#23201E;--ink:#F0ECE8;--ink-sub:#C3B9B2;--ink-muted:#958A83;
+    --warn-bg:#3A2422;--warn-line:#7A3F35;--out:#F08C80;--good-bg:#1F3321;--good-ink:#9FD8A4;
+    --grid:#38322E;
+    --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;
+  }
+}
+:root[data-theme="dark"]{
+  --kaki:#E8774F;--kaki-deep:#F3B9A3;--kaki-soft:#3A2620;--yamabuki-soft:#3A3020;
+  --line:#38322E;--bg:#1A1716;--surface:#23201E;--ink:#F0ECE8;--ink-sub:#C3B9B2;--ink-muted:#958A83;
+  --warn-bg:#3A2422;--warn-line:#7A3F35;--out:#F08C80;--good-bg:#1F3321;--good-ink:#9FD8A4;
+  --grid:#38322E;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);background:var(--surface)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--maru);font-weight:900;font-size:19px}
+.logo-mark{width:32px;height:32px;border-radius:10px;background:var(--kaki);display:grid;place-items:center}
+.back{font-size:14px;color:var(--ink-sub);text-decoration:none}
+h1{font-family:var(--maru);font-weight:900;font-size:clamp(26px,5vw,38px);line-height:1.4;margin:48px 0 8px}
+.meta{color:var(--ink-sub);font-size:14px;margin:0 0 28px}
+h2{font-family:var(--maru);font-size:clamp(21px,3.6vw,26px);margin:56px 0 6px;padding-top:8px;border-top:3px solid var(--kaki);display:inline-block}
+h2 .no{color:var(--kaki);margin-right:8px}
+h3{font-family:var(--maru);font-size:18px;margin:32px 0 8px}
+p{margin:0 0 14px}
+.sub{color:var(--ink-sub);font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin:16px 0}
+.summary{background:var(--kaki-soft);border:none}
+.summary h2{border:none;margin-top:0;padding:0}
+.summary ol{margin:0;padding-left:1.3em}
+.summary li{margin-bottom:10px}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:16px;padding:16px 20px;margin:16px 0}
+.warn b{color:var(--out)}
+.good{background:var(--good-bg);border-radius:16px;padding:16px 20px;margin:16px 0}
+.good b{color:var(--good-ink)}
+nav.toc{font-size:14px}
+nav.toc ol{margin:0;padding-left:1.3em;columns:2;column-gap:32px}
+@media (max-width:620px){nav.toc ol{columns:1}}
+nav.toc a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--ink-muted)}
+.tbl{overflow-x:auto;margin:12px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--yamabuki-soft);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.me td{background:var(--kaki-soft);font-weight:700}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:0 7px;margin:1px 2px;white-space:nowrap}
+.t-off{background:var(--good-bg);color:var(--good-ink)}
+.t-news{background:var(--yamabuki-soft);color:var(--ink-sub)}
+.t-est{background:var(--kaki-soft);color:var(--kaki-deep)}
+.t-unk{background:var(--line);color:var(--ink-sub)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.kpi .v{font-family:var(--maru);font-weight:900;font-size:28px;line-height:1.3;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:15px;font-weight:700;margin-left:2px}
+.kpi .l{font-size:13px;color:var(--ink-sub)}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 16px 10px;margin:16px 0;position:relative}
+.chart h4{margin:0 0 2px;font-size:15px}
+.chart .cap{font-size:12px;color:var(--ink-sub);margin:0 0 8px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--ink-sub);margin:4px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.legend i.ln{height:3px;border-radius:2px;width:18px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:var(--sans);fill:var(--ink-sub);font-size:11px}
+svg .lbl{fill:var(--ink);font-weight:700}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.6;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none;min-width:150px;z-index:5}
+.tip b{display:block;color:var(--ink)}
+.tip .row{display:flex;justify-content:space-between;gap:12px;color:var(--ink-sub)}
+.tip .row i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:6px}
+details{margin:8px 0}
+summary{cursor:pointer;font-size:13px;color:var(--ink-sub)}
+ul.src{font-size:12px;color:var(--ink-sub);padding-left:1.2em;word-break:break-all}
+ul.src li{margin-bottom:4px}
+ul.src a{color:var(--ink-sub)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.two .card{margin:0}
+.two h3{margin-top:0}
+footer{border-top:1px solid var(--line);margin-top:64px;padding:24px 0 40px;font-size:13px;color:var(--ink-sub)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html">
+      <span class="logo-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.5 3 5 6.4 5c2 0 3.4 1.1 4.2 2.4h2.8C14.2 6.1 15.6 5 17.6 5 21 5 23.1 8.5 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg></span>
+      ありがとPay
+    </a>
+    <a class="back" href="index.html">← コンセプトへ</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>外部環境調査レポート</h1>
+  <p class="meta">2026-11-19 時点・事業判断用（社内向け）。数字には確からしさの印を付けています：
+    <span class="tag t-off">公式</span>公的統計・企業の公式発表
+    <span class="tag t-news">報道</span>報道・解説記事だけで確認
+    <span class="tag t-est">試算</span>このレポートでの計算
+    <span class="tag t-unk">不明</span>確認できなかったもの</p>
+
+  <section class="card summary" aria-labelledby="sum">
+    <h2 id="sum">要点</h2>
+    <ol>
+      <li><b>既存の決済より、お店の手数料は 1/4〜1/10 以下。</b>中小店のカード・コード決済は 1.6〜3.25%（条件付きの値下げを含む）。ありがとPay の 0.5%（下限5円・上限100円）は、1,000円〜30,000円のどの会計でも主要各社より大幅に安い。</li>
+      <li><b>ただし JPYC の決済の競合は、お店の手数料 0%。</b>MisePay・Avacus Pay・HashPort Wallet for Biz はどれも 0% を掲げ、JPYC 社自身も「加盟店手数料を取らない」立場。お金を取る前例は EC 向けの uniple checkout（1.0%＋1件 0.5 JPYC）だけ。<b>0.5% を払ってもらう理由づけが最大の論点。</b></li>
+      <li><b>市場は大きいが、JPYC の利用者はまだごく少ない。</b>キャッシュレスは年 162.7兆円（2025年・比率 58.0%）、お店の手数料は推計で年 3〜5兆円。一方、JPYC の流通額は 30億円超・口座 28,000件超で、コード決済（店舗利用 22.6兆円・月間利用者 約9,700万人）と桁が違う。<b>払う人を集めるのが一番の壁。</b></li>
+      <li><b>狙うお店は多く、手数料に不満がある。</b>飲食店 約43万・小売業 約88万・理容美容など 約30万の事業所（2021年）。宿泊・飲食の約85%は年商3,000万円未満。手数料に不満を持つ店は 5〜6割という調査が複数ある。</li>
+      <li><b>組む相手の入口は JPYC EX 連携 API（2026-07 開始）。</b>チャージ・出金を JPYC EX に任せる今の設計とそのまま合う。利用の条件・料金は未公表なので、JPYC 社への問い合わせが要る。</li>
+    </ol>
+  </section>
+
+  <nav class="card toc" aria-label="目次">
+    <ol>
+      <li><a href="#s1">既存の決済（カード・コード・電子マネー）との比較</a></li>
+      <li><a href="#s2">JPYC 関連のサービスとの比較</a></li>
+      <li><a href="#s3">ほかの円建てステーブルコイン</a></li>
+      <li><a href="#s4">市場規模</a></li>
+      <li><a href="#s5">狙うお店の数と、手数料への不満</a></li>
+      <li><a href="#s6">制度の動き</a></li>
+      <li><a href="#s7">ありがとPay への示唆と、確かめること</a></li>
+      <li><a href="#s8">出典</a></li>
+    </ol>
+  </nav>
+
+  <!-- ===================== 1 ===================== -->
+  <h2 id="s1"><span class="no">1</span>既存の決済との比較</h2>
+  <p>中小店（飲食・小売・サービス）が選びやすい、月額0円のプランを中心に比べます。</p>
+
+  <h3>1-1 主なサービスの条件</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>サービス</th><th>お店の手数料</th><th>入金</th><th>固定費・端末</th><th>確からしさ</th></tr></thead>
+    <tbody>
+      <tr><td>Square</td><td>カード対面 2.5%〜（年3,000万円未満などの条件）。条件外 3.25%。交通系・iD・QR は 3.25%</td><td>翌営業日（みずほ・三井住友）／毎週金曜。振込無料</td><td>月額0円。リーダー 4,980円</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>Airペイ</td><td>カード・電子マネー・QR 3.24%。値引きプログラム（申込み・審査）で6ブランド 2.48%</td><td>月3回か6回。振込無料</td><td>初期・月額0円。iPad か iPhone が要る</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>楽天ペイ（実店舗）</td><td>ライト（月0円）2.48%。スタンダード（月2,200円）2.20%。電子マネー 2.95%〜</td><td>楽天銀行なら翌日・無料。他行は1回 300円（税別）</td><td>月額のキャンペーンの期限は資料が食い違う</td><td><span class="tag t-off">公式</span> <span class="tag t-news">一部報道</span></td></tr>
+      <tr><td>STORES 決済</td><td>フリー 2.48%。スタンダード 1.98%〜（飲食店は対象外）。電子マネー・QR 3.24%</td><td>最短で翌々営業日</td><td>スタンダード月3,300円（2027-02 から 4,950円に値上げ）</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>PayPay</td><td>1.98%（税別）。ライトプラン（月1,980円・税別）で 1.60%（税別）</td><td>月1回。早く受け取るなら 0.38%＋振込手数料</td><td>初期0円</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>d払い・メルペイ</td><td>2.6%（税別。業界団体の一覧では税込 2.86%）。新規は最大6か月無料</td><td>月1〜2回。1万円未満は繰り越し</td><td>0円</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>au PAY</td><td>2.6%（税別）</td><td>月2回・無料</td><td><span class="tag t-unk">不明</span></td><td><span class="tag t-off">業界団体</span></td></tr>
+      <tr><td>交通系電子マネー</td><td>どの代行会社でも 2.95〜3.25%。値下げの対象外が多い</td><td>代行会社による</td><td>—</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>J-Coin Pay・Bank Pay</td><td>料率は公開されていない</td><td colspan="2"><span class="tag t-unk">不明</span></td><td>—</td></tr>
+      <tr class="me"><td>ありがとPay（案）</td><td>0.5%・下限5円・上限100円</td><td>即時（円にするのは JPYC EX の償還。振込手数料の負担者は要確認）</td><td>0円の予定</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub">注意：安い料率の多くは「年間の決済額」「申込み・審査」「業種」の条件付き。条件を外れると 3.24〜3.25% に戻る。カードは非課税、コード決済は税別の表示が多く、比べるときは税をそろえる必要がある（下の計算は税込にそろえた）。</p>
+
+  <h3>1-2 会計1回あたりのお店の手数料</h3>
+  <div class="chart" id="feeChart">
+    <h4>会計の金額と、お店が払う手数料（円）</h4>
+    <p class="cap">線にカーソルを当てると、その金額での各社の手数料が出ます。月額の固定費は含めていません。<span class="tag t-est">試算</span></p>
+    <div class="legend" id="feeLegend"></div>
+    <div id="feeSvg"></div>
+    <div class="tip" id="feeTip" role="status"></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>料率（税込にそろえた）</th><th class="n">1,000円</th><th class="n">3,000円</th><th class="n">10,000円</th><th class="n">30,000円</th></tr></thead>
+    <tbody>
+      <tr><td>Airペイ 通常・Square の電子マネーと QR（3.24〜3.25%）</td><td class="n">32円</td><td class="n">97円</td><td class="n">324円</td><td class="n">972円</td></tr>
+      <tr><td>d払い・au PAY（2.86%）</td><td class="n">29円</td><td class="n">86円</td><td class="n">286円</td><td class="n">858円</td></tr>
+      <tr><td>Square カード（2.5%）</td><td class="n">25円</td><td class="n">75円</td><td class="n">250円</td><td class="n">750円</td></tr>
+      <tr><td>楽天ライト・STORES フリー・Airペイ値引き（2.48%）</td><td class="n">25円</td><td class="n">74円</td><td class="n">248円</td><td class="n">744円</td></tr>
+      <tr><td>PayPay 月額0円（2.178%）</td><td class="n">22円</td><td class="n">65円</td><td class="n">218円</td><td class="n">653円</td></tr>
+      <tr><td>PayPay ライト（1.76%・別に月2,178円）</td><td class="n">18円</td><td class="n">53円</td><td class="n">176円</td><td class="n">528円</td></tr>
+      <tr class="me"><td>ありがとPay（0.5%・下限5円・上限100円）</td><td class="n">5円</td><td class="n">15円</td><td class="n">50円</td><td class="n">100円</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub">月額のプランの元が取れるのは、月の決済額が PayPay ライトで約52万円、STORES スタンダードで約66万円、楽天スタンダードで約79万円から <span class="tag t-est">試算</span>。小さな店は月額0円のプランを選ぶのが自然。</p>
+
+  <h3>1-3 手数料以外の差</h3>
+  <div class="two">
+    <div class="card">
+      <h3>ありがとPay が勝てる点</h3>
+      <ul>
+        <li>手数料の水準（上の表）。高額の会計ほど差が開く（上限100円）。</li>
+        <li>売上がすぐ届く（月1〜2回の入金のコード決済に比べて速い）。</li>
+        <li>端末が要らない（スマホのアプリだけ）。</li>
+        <li>「手数料で応援」というお客さまの気持ちを乗せられる。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>既存の決済が強い点</h3>
+      <ul>
+        <li>払う人の数（PayPay だけで登録 7,500万人超）。すでにスマホに入っている。</li>
+        <li>ポイント還元・キャンペーン（払う人の得）。</li>
+        <li>お店は円で受け取り、銀行に自動で入る。ありがとPay は JPYC EX で償還する手間がある。</li>
+        <li>レジ・POS とのつながり、問い合わせの窓口。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===================== 2 ===================== -->
+  <h2 id="s2"><span class="no">2</span>JPYC 関連のサービスとの比較</h2>
+
+  <h3>2-1 JPYC 本体の今</h3>
+  <div class="kpis">
+    <div class="kpi"><div class="v">約120<small>億円</small></div><div class="l">累計の発行額（発行から1年・2026-10） <span class="tag t-news">報道</span></div></div>
+    <div class="kpi"><div class="v">30<small>億円超</small></div><div class="l">流通額（2026-10） <span class="tag t-news">報道</span></div></div>
+    <div class="kpi"><div class="v">28,000<small>件超</small></div><div class="l">JPYC EX の口座開設数（実際に使う人の数は不明） <span class="tag t-news">報道</span></div></div>
+    <div class="kpi"><div class="v">150<small>以上</small></div><div class="l">導入した事業者（実店舗・EC など） <span class="tag t-news">報道</span></div></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>項目</th><th>内容</th><th>確からしさ</th></tr></thead>
+    <tbody>
+      <tr><td>発行の開始</td><td>2025-08-18 に資金移動業者として登録。2025-10-27 に JPYC と JPYC EX を正式リリース</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>発行額の推移</td><td>累計10億円（2026-02）→ 25億円（2026-05）→ 100億円（2026-09）→ 約120億円（2026-10）</td><td><span class="tag t-off">公式</span> <span class="tag t-news">報道</span></td></tr>
+      <tr><td>チェーン</td><td>Ethereum・Avalanche・Polygon・Kaia（2026-05 に追加）</td><td><span class="tag t-news">報道</span></td></tr>
+      <tr><td>発行・償還</td><td>1回 3,000円以上。発行の上限は1回100万円。手数料は無料（振込手数料とガス代は利用者）。本人確認はマイナンバーカード</td><td><span class="tag t-news">報道</span></td></tr>
+      <tr><td>裏付け</td><td>預貯金と国債で発行残高の100%以上を保全</td><td><span class="tag t-news">報道</span></td></tr>
+      <tr><td>JPYC EX 連携 API</td><td>2026-07-13 開始。ログイン・口座の連携、発行・償還の画面への移動、アドレス登録の手助け、手続きの状態の連携。申込みを受けるのは JPYC だけ。料金・申込み方法は未公表</td><td><span class="tag t-off">公式</span> <span class="tag t-unk">料金は不明</span></td></tr>
+      <tr><td>会社の立場</td><td>加盟店手数料を取らない立場で、2026-09 にキャッシュレス決済の競争について公正取引委員会へ情報を提供。黒字には流通額 500億〜1,000億円が要ると報道（今は赤字）。発行の目標は「3年で10兆円」と「1兆円」の報道が食い違う</td><td><span class="tag t-news">報道</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>2-2 JPYC を使う決済・サービス</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>名前（運営）</th><th>何をするか</th><th>お店の手数料</th><th>時期・状況</th><th>ありがとPay から見て</th></tr></thead>
+    <tbody>
+      <tr><td>MisePay（Sowaka Japan）</td><td>お店が QR を出し、払う人が自分の財布で払う。端末不要。返金の権限を担当者・上限ごとに設定。コインを預からない</td><td><b>0%</b>・導入0円 <span class="tag t-off">公式</span></td><td>2026-07 から3店でトライアル、参加店を募集中</td><td><b>真っ向の競合</b>。形がほぼ同じ。収益の仕組みは不明</td></tr>
+      <tr><td>Avacus Pay（SOWAKA、シンガポール）</td><td>QR 決済。ガス代はシステム側で負担</td><td><b>0%</b> <span class="tag t-news">報道</span></td><td>2025-12 発表。初年度1,000店の目標。実績は不明</td><td>競合</td></tr>
+      <tr><td>HashPort Wallet for Biz（HashPort）</td><td>お店向けの JPYC 決済</td><td><b>0%</b> と報道 <span class="tag t-news">報道</span></td><td>2026-04 から2店で実証</td><td>競合。親のウォレットは利用者が多い</td></tr>
+      <tr><td>HashPort Wallet（HashPort）</td><td>利用者が鍵を持つ財布。2026-07 から JPYC EX と連携して発行・償還。累計115万ダウンロード超</td><td>該当なし</td><td>稼働中</td><td><b>連携の候補</b>（上級者向けの外部の財布）。連携 API の最初の例</td></tr>
+      <tr><td>ローソンの店頭実証（ローソン・KDDI・HashPort・JPYC）</td><td>財布のバーコードをコンビニの POS で読む</td><td><span class="tag t-unk">不明</span></td><td>2026-08、関係者限定。速さと返金が課題</td><td>大手が先に実店舗を試している</td></tr>
+      <tr><td>αU wallet（KDDI ほか）</td><td>Ponta から JPYC へ交換。JPYC を au PAY 残高にチャージして全国の加盟店で使える</td><td>お店は au PAY の通常の手数料。チャージ時に約3% <span class="tag t-news">報道</span></td><td>2026-09-30 開始</td><td><b>払う人から見て強い競合</b>。「JPYC で払える場所」が一気に広い</td></tr>
+      <tr><td>uniple checkout（uniple）</td><td>EC 向けの JPYC 決済（WooCommerce・EC-CUBE・Shopify）</td><td><b>1.0%＋1件 0.5 JPYC</b>。ガス代は uniple <span class="tag t-off">公式</span></td><td>2026-07 開始</td><td>お金を取る唯一の前例。EC で組む・比べる相手</td></tr>
+      <tr><td>Unifi（LINE NEXT）</td><td>ステーブルコインの財布（保管・送金・決済・利息）。Kaia 上の JPYC</td><td>該当なし</td><td>2026-05 から JPYC</td><td>LINE の利用者に JPYC が広がる入口</td></tr>
+      <tr><td>給与・報酬の支払い（AZ-COM丸和ホールディングス）</td><td>取引先・個人の請負 約2,300者への報酬を JPYC で支払う計画</td><td><span class="tag t-unk">不明</span></td><td>2026-07 報道、開始は不明</td><td>JPYC を受け取った人の「使う先」になれる</td></tr>
+      <tr><td>免税の還付（日本免税・UPBOND・JPYC）</td><td>訪日客への消費税の還付を JPYC で即時に払う</td><td><span class="tag t-unk">不明</span></td><td>2026-11-01 開始</td><td>同上（訪日客が持つ JPYC）</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="warn"><b>一番の論点：</b>JPYC で受けるお店の決済の競合は、どれもお店の手数料 0% を掲げています。ありがとPay の 0.5% は、カード・コード決済と比べれば安いものの、同じ JPYC の中では「高い」側です。0% の各社は数店のトライアルの段階で、長く 0% を続けられるか（収益の仕組み）は分かっていません。</div>
+
+  <!-- ===================== 3 ===================== -->
+  <h2 id="s3"><span class="no">3</span>ほかの円建てステーブルコイン</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>名前（運営）</th><th>形</th><th>時期・状況</th><th>お店の決済</th><th>確からしさ</th></tr></thead>
+    <tbody>
+      <tr><td>JPYC（JPYC）</td><td>資金移動型。1回の送金・滞留に100万円の制限</td><td>2025-10 から発行</td><td>各社が 0% で導入中（2章）</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>JPYSC（SBI新生信託銀行・SBI VCトレード・Startale）</td><td>信託型。100万円の制限を受けない</td><td>2026-06 発行。今は SBI VC トレードの口座の中だけ</td><td>言及なし（貸し出し・RWA・国際送金）</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>三メガバンクの共同ステーブルコイン（基盤 Progmat）</td><td>信託型</td><td>2026-07 に実証。2027-03 までに実際の取引の開始が目標</td><td>企業間・国をまたぐ決済が中心</td><td><span class="tag t-news">報道</span></td></tr>
+      <tr><td>DCJPY（ゆうちょ銀行・ディーカレットDCP）</td><td>銀行の預金型（トークン化預金）</td><td>2026年度中の開始が目標。始まったかは未確認</td><td>補助金・給付金の構想。店舗は不明</td><td><span class="tag t-news">報道</span></td></tr>
+      <tr><td>みんなの銀行</td><td>Solana での発行の調査</td><td>調査段階</td><td><span class="tag t-unk">不明</span></td><td><span class="tag t-news">報道</span></td></tr>
+      <tr><td>GYEN（GMO-Z.com Trust、米国）</td><td>米国の認可。日本の居住者には販売しない</td><td>発行済み</td><td>なし</td><td><span class="tag t-news">報道</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>今のところ、銀行系の円のコインは企業間・投資向けが中心で、お店の決済にはぶつかりません。<b>将来、100万円の制限がない信託型や預金型がお店の決済に来たら、対応するコインを増やす候補</b>になります（今の設計は EIP-3009 の署名を使うので、同じ仕組みを持つコインかどうかの確認が要ります）。</p>
+
+  <h3>参考：海外のステーブルコイン決済の手数料</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>サービス</th><th>お店の手数料</th><th>確からしさ</th></tr></thead>
+    <tbody>
+      <tr><td>Stripe のステーブルコイン決済</td><td>1.5%</td><td><span class="tag t-news">報道</span>（公式の料金ページでは未確認）</td></tr>
+      <tr><td>PayPal「Pay with Crypto」（米国）</td><td>最初の1年 0.99%、その後 1.5%</td><td><span class="tag t-news">報道</span></td></tr>
+      <tr><td>Shopify と USDC</td><td>Shopify 側の手数料は不明</td><td><span class="tag t-unk">不明</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub">海外では「ステーブルコインだから0%」ではなく、1〜1.5% が相場。ありがとPay の 0.5% は海外の水準と比べても低い。</p>
+
+  <!-- ===================== 4 ===================== -->
+  <h2 id="s4"><span class="no">4</span>市場規模</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="v">162.7<small>兆円</small></div><div class="l">キャッシュレス決済額（2025年） <span class="tag t-off">公式</span></div></div>
+    <div class="kpi"><div class="v">58.0<small>%</small></div><div class="l">キャッシュレス決済比率（国内指標・2025年） <span class="tag t-off">公式</span></div></div>
+    <div class="kpi"><div class="v">22.6<small>兆円</small></div><div class="l">コード決済の店舗利用額（2025年・うち実店舗 17.8兆円） <span class="tag t-off">業界団体</span></div></div>
+    <div class="kpi"><div class="v">3〜5<small>兆円</small></div><div class="l">お店が払う決済手数料の総額（年） <span class="tag t-est">試算</span></div></div>
+  </div>
+
+  <h3>4-1 キャッシュレス決済額の推移</h3>
+  <div class="chart" id="cashChart">
+    <h4>手段別のキャッシュレス決済額（兆円）</h4>
+    <p class="cap">経済産業省「2025年のキャッシュレス決済比率」。棒にカーソルを当てると内訳が出ます。コード決済は、クレジットカードとひもづけた分を除いた値（その分はカードに入る）。</p>
+    <div class="legend" id="cashLegend"></div>
+    <div id="cashSvg"></div>
+    <div class="tip" id="cashTip" role="status"></div>
+  </div>
+  <details>
+    <summary>表で見る（決済額・比率）</summary>
+    <div class="tbl"><table>
+      <thead><tr><th>年</th><th class="n">合計</th><th class="n">クレジット</th><th class="n">デビット</th><th class="n">電子マネー</th><th class="n">コード</th><th class="n">比率（国内指標）</th><th class="n">比率（国際比較指標）</th></tr></thead>
+      <tbody id="cashTable"></tbody>
+    </table></div>
+  </details>
+  <p>2025年分から、主な物差しが「国内指標」（分母は家計の消費から持ち家の帰属家賃を除いたもの）に変わりました。従来の物差し（国際比較指標）では 46.3% です。<b>政府の新しい目標は 2030年に国内指標で 65%、将来は 80%</b>。コード決済は 2018年の 0.2兆円から 2025年の 16.6兆円へ、7年で80倍に伸びました。</p>
+
+  <h3>4-2 お店が払う決済手数料の総額 <span class="tag t-est">試算</span></h3>
+  <p>手数料の総額を出した公的な推計は見つかりませんでした。そこで「手段別の決済額 × 料率」で幅を持たせて計算しました（2025年・EC を含む）。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>ケース</th><th class="n">カードの料率</th><th class="n">コードの料率</th><th class="n">電子マネーの料率</th><th class="n">合計</th></tr></thead>
+    <tbody>
+      <tr><td>低め</td><td class="n">2.0%</td><td class="n">1.60%</td><td class="n">2.5%</td><td class="n">約3.2兆円</td></tr>
+      <tr><td>中くらい</td><td class="n">2.5%</td><td class="n">1.74%</td><td class="n">3.0%</td><td class="n">約3.9兆円</td></tr>
+      <tr><td>高め（中小店の標準料率）</td><td class="n">3.24%</td><td class="n">1.98%</td><td class="n">3.24%</td><td class="n">約5.0兆円</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub">前提：カード 134.1兆円（コード決済経由の 6.0兆円を除き、デビット 5.5兆円を足した）、コード 22.6兆円、電子マネー 6.0兆円。コードの中くらいの料率 1.74% は PayPay の取扱高に対する収益の比率（2026年7〜9月期）。大手・EC は料率が低いので、実際は低め〜中くらいに寄ると見られる。参考：帝国データバンクの調べでは、飲食店の売上に占める支払手数料は 1.54%（2014年度）→ 2.94%（2024年度）とほぼ倍。</p>
+
+  <h3>4-3 1回の会計の金額（下限・上限が効く範囲）</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>手段</th><th class="n">平均の単価</th><th>出し方</th></tr></thead>
+    <tbody>
+      <tr><td>コード決済（実店舗・2025年）</td><td class="n">1,564円</td><td>17.78兆円 ÷ 113.68億件 <span class="tag t-est">試算</span></td></tr>
+      <tr><td>PayPay（2026年7〜9月期）</td><td class="n">1,930円</td><td><span class="tag t-off">公式</span></td></tr>
+      <tr><td>電子マネー（2025年）</td><td class="n">約1,030円</td><td>6.0兆円 ÷ 58.03億件 <span class="tag t-est">試算</span></td></tr>
+      <tr><td>クレジットカード（2025年）</td><td class="n">約5,900円</td><td>134.6兆円 ÷ 228.32億件 <span class="tag t-est">試算</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>ありがとPay の 0.5% は <b>1,000円未満で下限5円</b>、<b>20,000円以上で上限100円</b>にかかります。コード決済の平均は 1,500〜1,900円なので、多くの会計は「0.5% がそのまま効く」範囲で、1,000円未満の小さな会計も相当あると見られます（金額帯ごとの件数の統計は見つからず <span class="tag t-unk">不明</span>）。平均 1,564円の会計なら手数料は約8円、ガス代（約0.46円）を引いて約7円が運営の取り分です <span class="tag t-est">試算</span>。</p>
+
+  <h3>4-4 JPYC とコード決済の規模の差</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>比べるもの</th><th class="n">JPYC</th><th class="n">コード決済</th><th class="n">差</th></tr></thead>
+    <tbody>
+      <tr><td>お金の規模</td><td class="n">流通額 30億円超</td><td class="n">店舗利用額 年22.6兆円</td><td class="n">—（残高と年の利用額で単位が違う）</td></tr>
+      <tr><td>人の数</td><td class="n">口座 28,000件超</td><td class="n">月間利用者 9,679万人（2025年12月）</td><td class="n">約3,500分の1</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>払う人のほとんどは、まだ JPYC を持っていません。</b>ありがとPay の市場は「お店の数」より先に「JPYC を持って払う人の数」で決まります。αU wallet（Ponta から交換）、HashPort Wallet、Unifi、給与・免税の還付など、JPYC を受け取る入口は 2026 年に急に増えており、ここが伸びるかが前提になります。</p>
+
+  <h3>4-5 規模感の目安 <span class="tag t-est">試算</span></h3>
+  <div class="tbl"><table>
+    <thead><tr><th>コード決済の実店舗利用（17.8兆円）のうち</th><th class="n">取扱高</th><th class="n">手数料の収入（平均 約0.5%）</th></tr></thead>
+    <tbody>
+      <tr><td>0.01% を取れたら</td><td class="n">約18億円</td><td class="n">約900万円／年</td></tr>
+      <tr><td>0.1% を取れたら</td><td class="n">約178億円</td><td class="n">約8,900万円／年</td></tr>
+      <tr><td>1% を取れたら</td><td class="n">約1,778億円</td><td class="n">約8.9億円／年</td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub">取扱高 × 0.5% の粗い計算（下限・上限、ガス代、返金は考えていない）。固定費は月5,000円程度の見込みなので、0.01% でも固定費は賄える計算。ただし 0.1%（年178億円）でも、今の JPYC の流通額（30億円）の約6倍が1年にありがとPay を通る計算で、JPYC 自体の普及が先に要る。</p>
+
+  <!-- ===================== 5 ===================== -->
+  <h2 id="s5"><span class="no">5</span>狙うお店の数と、手数料への不満</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="v">43.0<small>万</small></div><div class="l">飲食店の事業所（2021年） <span class="tag t-off">公式</span></div></div>
+    <div class="kpi"><div class="v">88.0<small>万</small></div><div class="l">小売業の事業所（2021年） <span class="tag t-off">公式</span></div></div>
+    <div class="kpi"><div class="v">29.7<small>万</small></div><div class="l">洗濯・理容・美容・浴場業の事業所（2021年） <span class="tag t-off">公式</span></div></div>
+    <div class="kpi"><div class="v">約85<small>%</small></div><div class="l">宿泊・飲食で年商3,000万円未満の企業の割合 <span class="tag t-off">公式</span></div></div>
+  </div>
+  <p class="sub">出典は令和3年経済センサス‐活動調査（2021年6月時点、公表済みの最新）。個人経営の割合は、宿泊・飲食 77.9%、生活関連サービス・娯楽 79.8%。年商3,000万円未満は、Square・STORES の値下げの条件（年3,000万円未満）にも当てはまる層。</p>
+
+  <h3>手数料への不満の調査</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>調査</th><th>結果</th><th>確からしさ</th></tr></thead>
+    <tbody>
+      <tr><td>日本政策金融公庫 論集（2025-02、元は 2021-11 の調査）</td><td>「決済手数料が高い」：導入した店 58.8%、やめた店 45.2%、入れていない店 27.9%。「入金が遅い」は 19.9%・16.4%・9.8%</td><td><span class="tag t-off">公的機関</span></td></tr>
+      <tr><td>経済産業省 実態調査（2021年、1,189件）</td><td>入れない理由の1位は「客の要望がない」、2位「手数料が高い」。客単価5,000円未満の店では「手数料」が1位。受け入れられる手数料は「2%台まで」が8割超</td><td><span class="tag t-news">報道経由</span></td></tr>
+      <tr><td>スーパーデリバリー（2025-08、124店）</td><td>手数料に不満 58%、入金サイクルに不満 19%</td><td><span class="tag t-news">民間・少数</span></td></tr>
+      <tr><td>帝国データバンク（2026-04）</td><td>飲食店の売上に占める支払手数料 1.54% → 2.94%（2014→2024年度）</td><td><span class="tag t-news">民間・財務データ</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="good"><b>追い風：</b>手数料に不満を持つ店は多く、特に客単価の低い店ほど手数料を気にしています。ありがとPay の下限5円は、1,000円前後の会計が多い店（喫茶・ラーメン・パン屋など）に響きやすい設計です。</div>
+  <div class="warn"><b>向かい風：</b>入れない理由の1位は「お客さまの要望がない」。お店は手数料が安くても、払う人がいなければ入れません。4-4 と同じ問題です。</div>
+
+  <!-- ===================== 6 ===================== -->
+  <h2 id="s6"><span class="no">6</span>制度の動き</h2>
+  <ul>
+    <li><b>電子決済手段の4つの形</b>：資金移動型（JPYC。100万円の制限）・銀行の預金型・信託型（JPYSC・三メガ）・外国のもの（USDC など）。売買・管理する業者は「電子決済手段等取引業者」の登録が要る（2023-06 施行）。<span class="tag t-off">公式</span></li>
+    <li><b>登録済みの電子決済手段等取引業者は2社</b>：SBI VCトレード（2025-03）、コインチェック（2026-08）。<span class="tag t-off">公式</span></li>
+    <li><b>2025年の改正</b>：信託型の裏付け資産の一部を短期の国債などで運用できるように。あわせて暗号資産・電子決済手段の<b>仲介業</b>を新設（施行は 2026-06-01 と報道）。<span class="tag t-news">報道</span></li>
+    <li><b>キャッシュレスの政策</b>：2025年12月のとりまとめで、中小の加盟店の手数料の負担感が高まっていると指摘。JPYC 社は 2026-09 に公正取引委員会へ情報を提供。</li>
+  </ul>
+  <div class="warn"><b>要確認：</b>預からず、宛先・金額が固定された署名を中継するだけのありがとPay が、電子決済手段等取引業や新しい仲介業に当たらないかは、この調査では判断できません。弁護士か金融庁への確認が要ります（M0 の論点）。</div>
+
+  <!-- ===================== 7 ===================== -->
+  <h2 id="s7"><span class="no">7</span>ありがとPay への示唆と、確かめること</h2>
+  <h3>示唆</h3>
+  <ol>
+    <li><b>比べる相手が2つある。</b>カード・コード決済に対しては「1/4〜1/10 の手数料・すぐ届く」で強い。JPYC の決済（0%）に対しては、0.5% を払ってもらう理由が要る。候補：返金・スタッフの権限などのお店の運用、円の売上だけ見せる分かりやすさ、ガス代を運営が持つこと、「手数料で応援」で 0.5% の意味を変えること、続けられる事業であること（0% の各社の収益の仕組みは不明）。</li>
+    <li><b>一番の壁は払う人。</b>JPYC の口座は 28,000件超で、コード決済の利用者の約3,500分の1。JPYC を受け取る入口（ポイント交換・給与・免税の還付・LINE の財布）と組んで、「持っている JPYC の使い先」として入るのが近道。</li>
+    <li><b>大手が動き始めた。</b>KDDI（αU wallet・ローソン）が JPYC を au PAY の加盟店網につないだ。払う人から見ると「JPYC で払える場所」は au PAY のほうが圧倒的に広い。小さな店が「au PAY より安く受けられる」点で差をつける。</li>
+    <li><b>最初の狙いは、客単価が低く手数料を気にする個人店。</b>飲食・理容美容などで年商3,000万円未満の店が大きな層。</li>
+  </ol>
+  <h3>確かめること（JPYC 社・弁護士）</h3>
+  <ol>
+    <li>JPYC EX 連携 API の利用条件・料金・審査、決済アプリでの利用の可否。</li>
+    <li>JPYC 社の「加盟店手数料を取らない」立場と、ありがとPay がお店から 0.5% を取ることの相性（JPYC 社が求める表示・禁止事項）。</li>
+    <li>償還の振込手数料の負担者、償還の上限、個人事業主の法人アカウント。</li>
+    <li>ノンカストディアルの中継が、電子決済手段等取引業・仲介業に当たらないか（弁護士）。</li>
+    <li>MisePay など 0% の各社の収益の仕組み（公開情報で追い続ける）。</li>
+  </ol>
+
+  <!-- ===================== 8 ===================== -->
+  <h2 id="s8"><span class="no">8</span>出典</h2>
+  <p class="sub">2026-11-19 に Web で確認。一部の公式ページ（jpyc.co.jp、経済産業省の一部の PDF）は読み込めず、転載・報道で確かめた。</p>
+  <h3>既存の決済</h3>
+  <ul class="src">
+    <li><a href="https://squareup.com/jp/ja/pricing">Square 料金</a> ・ <a href="https://squareup.com/jp/ja/press/jcb-diners-discover-americanexpress-reduction">Square 2.5% の拡大（2025-01）</a></li>
+    <li><a href="https://airregi.jp/payment/">Airペイ</a> ・ <a href="https://airregi.jp/payment/discountprogram/">Airペイ 値引きプログラム</a></li>
+    <li><a href="https://payment.rakuten.co.jp/news/2024120200/">楽天ペイ 料率（2024-12）</a> ・ <a href="https://pay.rakuten.co.jp/business/start/">楽天ペイ 始め方</a></li>
+    <li><a href="https://stores.fun/payments">STORES 決済</a> ・ <a href="https://www.watch.impress.co.jp/docs/news/2001940.html">STORES の料金改定（Impress Watch）</a></li>
+    <li><a href="https://paypay.ne.jp/store/plan/">PayPay 加盟店のプラン</a> ・ <a href="https://paypay.ne.jp/help-merchant/b0594/">PayPay 手数料</a></li>
+    <li><a href="https://service.smt.docomo.ne.jp/keitai_payment/corporation/shop/cost.html">d払い 加盟店の費用</a></li>
+    <li><a href="https://jpqr.paymentsjapan.or.jp/wp-content/uploads/2025/12/TC_services_20251215.pdf">キャッシュレス推進協議会 サービス一覧（2025-12-15）</a></li>
+    <li><a href="https://www.jftc.go.jp/houdou/pressrelease/2022/nov/221130creditcard.html">公正取引委員会 インターチェンジフィーの公開（2022-11）</a></li>
+  </ul>
+  <h3>JPYC・ステーブルコイン</h3>
+  <ul class="src">
+    <li><a href="https://ascii.jp/elem/000/004/336/4336809/">JPYC 正式リリース（ASCII・PR 転載）</a> ・ <a href="https://coinpost.jp/?p=745104">発行から1年の数字（CoinPost 2026-10-28）</a> ・ <a href="https://paymentnavi.com/?p=182688">累計100億円（ペイメントナビ）</a></li>
+    <li><a href="https://ascii.jp/elem/000/004/419/4419180/">JPYC EX 連携 API（ASCII 2026-07-13）</a> ・ <a href="https://www.watch.impress.co.jp/docs/news/2058390.html">JPYC の仕組み（Impress Watch）</a> ・ <a href="https://coinpost.jp/?p=738117">発行・償還の条件（CoinPost）</a> ・ <a href="https://voix.jp/money/?p=34083">公正取引委員会への情報提供</a></li>
+    <li><a href="https://ascii.jp/elem/000/004/417/4417099/">MisePay（ASCII 2026-07-07）</a> ・ <a href="https://innovatopia.jp/blockchain/blockchain-news/73734/">Avacus Pay</a> ・ <a href="https://paymentnavi.com/?p=173070">HashPort Wallet for Biz</a> ・ <a href="https://innovatopia.jp/blockchain/blockchain-news/113329/">HashPort Wallet と JPYC EX</a></li>
+    <li><a href="https://www.theblock.co/news/business/2026-07-12-lawson-pilots-jpyc-stablecoin-407982">ローソンの実証（The Block）</a> ・ <a href="https://coinpost.jp/?p=740129">αU wallet（CoinPost）</a> ・ <a href="https://www.commercepick.com/archives/98176">uniple checkout</a> ・ <a href="https://www.issoh.co.jp/tech/details/11300/">Unifi</a></li>
+    <li><a href="https://www.theblock.co/post/408862">給与の JPYC 払いの計画（The Block）</a> ・ <a href="https://coinpost.jp/?p=745397">免税の還付（CoinPost）</a></li>
+    <li><a href="https://www.sbigroup.co.jp/news/pr/pdf/2026/0624_b.pdf">JPYSC（SBI）</a> ・ <a href="https://www.watch.impress.co.jp/docs/news/2116013.html">三メガのステーブルコイン</a> ・ <a href="https://coinpost.jp/?p=647301">DCJPY</a></li>
+    <li><a href="https://finance.yahoo.com/news/stripe-charges-1-5-stablecoin-145737023.html">Stripe 1.5%</a> ・ <a href="https://siliconangle.com/2025/07/28/paypal-expands-crypto-payments-us-merchants-lower-cross-border-fees/">PayPal Pay with Crypto</a></li>
+    <li><a href="https://www.fsa.go.jp/policy/virtual_currency02/index.html">金融庁 電子決済手段</a> ・ <a href="https://www.fsa.go.jp/menkyo/menkyoj/denshikessaisyudan.pdf">電子決済手段等取引業者 登録一覧</a> ・ <a href="https://www.fsa.go.jp/common/diet/217/02/gaiyou.pdf">2025年の改正の概要</a></li>
+  </ul>
+  <h3>市場規模・お店の数</h3>
+  <ul class="src">
+    <li><a href="https://www.meti.go.jp/press/2025/03/20260331006/20260331006.html">経済産業省 2025年のキャッシュレス決済比率（2026-03-31）</a></li>
+    <li><a href="https://paymentsjapan.or.jp/code-payments/202507-12/">キャッシュレス推進協議会 コード決済利用動向調査（2025年7〜12月）</a> ・ <a href="https://paymentsjapan.or.jp/code-payments/202601-06/">同（2026年1〜6月）</a></li>
+    <li><a href="https://k-tai.watch.impress.co.jp/docs/news/2153395.html">PayPay 2026年7〜9月期（ケータイ Watch）</a> ・ <a href="https://www.watch.impress.co.jp/docs/news/2132012.html">PayPay の決済回数・利用者（Impress Watch）</a></li>
+    <li><a href="https://www.stat.go.jp/data/e-census/2021/kekka/pdf/k_outline.pdf">令和3年経済センサス‐活動調査 結果の概要</a> ・ <a href="https://www.stat.go.jp/data/e-census/2021/kekka/pdf/oroshikouri_outline.pdf">卸売業・小売業</a> ・ <a href="https://www.stat.go.jp/data/e-census/2021/kekka/pdf/service_outline.pdf">サービス産業</a></li>
+    <li><a href="https://www.jfc.go.jp/n/findings/pdf/ronbun2502_02.pdf">日本政策金融公庫 論集 第66号</a> ・ <a href="https://www.bcnretail.com/topics_detail9/20210813_237279.html">経済産業省 2021年の実態調査（BCN）</a> ・ <a href="https://www.commercepick.com/archives/74714">スーパーデリバリーの調査</a> ・ <a href="https://www.zaikei.co.jp/releases/3397449/">帝国データバンク 支払手数料</a></li>
+  </ul>
+</main>
+
+<footer>
+  <div class="wrap">ありがとPay 開発チーム ・ 事業判断のための調査（2026-11-19 時点）。数字は出典の時点のもので、変わることがあります。</div>
+</footer>
+
+<script>
+// グラフの色はページの CSS 変数から読みます（ライト・ダークで切り替わります）
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const yen = v => Math.round(v).toLocaleString('ja-JP') + '円';
+
+// ===== 1. 会計の金額と手数料 =====
+// お店が払う手数料（円）。税別の料率は 10% を足して税込にそろえています
+const FEE_SERIES = [
+  { name: 'Airペイ 通常（3.24%）', color: '--s1', f: a => a * 0.0324 },
+  { name: 'ありがとPay（0.5%・下限5円・上限100円）', color: '--s2', f: a => Math.min(100, Math.max(5, a * 0.005)), wide: true },
+  { name: 'Square カード（2.5%）', color: '--s3', f: a => a * 0.025 },
+  { name: 'PayPay 月額0円（2.178%）', color: '--s4', f: a => a * 0.02178 },
+];
+const AMOUNTS = [];
+for (let a = 500; a <= 30000; a += 500) AMOUNTS.push(a);
+
+function drawFee() {
+  const box = document.getElementById('feeSvg');
+  box.innerHTML = '';
+  const W = 860, H = 340, L = 52, R = 16, T = 12, B = 34;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '会計の金額ごとのお店の手数料の比較' }, box);
+  const xMax = 30000, yMax = 1000;
+  const x = a => L + (a / xMax) * (W - L - R);
+  const y = v => T + (1 - v / yMax) * (H - T - B);
+  // 目盛りの線
+  for (let v = 0; v <= yMax; v += 200) {
+    el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: cssVar('--grid'), 'stroke-width': 1 }, svg);
+    el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg).textContent = v.toLocaleString('ja-JP');
+  }
+  for (let a = 0; a <= xMax; a += 5000) {
+    el('text', { x: x(a), y: H - 12, 'text-anchor': 'middle' }, svg).textContent = a === 0 ? '0' : (a / 10000) + '万円';
+  }
+  // 線
+  FEE_SERIES.forEach(s => {
+    const pts = [[0, s.f(0.0001)]].concat(AMOUNTS.map(a => [a, s.f(a)]));
+    // ありがとPay は下限5円を 0円の位置から描くと誤解を生むので、1,000円未満は 5円の水平線にします
+    const d = pts.map((p, i) => (i ? 'L' : 'M') + x(p[0]).toFixed(1) + ' ' + y(p[1]).toFixed(1)).join(' ');
+    el('path', { d, fill: 'none', stroke: cssVar(s.color), 'stroke-width': s.wide ? 3 : 2, 'stroke-linejoin': 'round' }, svg);
+  });
+  // 線の右端に名前（直接のラベル）
+  const ends = FEE_SERIES.map(s => ({ s, v: s.f(xMax) })).sort((p, q) => q.v - p.v);
+  ends.forEach(e => {
+    const short = e.s.name.split('（')[0];
+    el('text', { x: W - R - 4, y: y(e.v) - 6, 'text-anchor': 'end', class: 'lbl' }, svg).textContent = short + ' ' + yen(e.v);
+  });
+  // カーソルの縦線と点
+  const cross = el('line', { y1: T, y2: H - B, stroke: cssVar('--ink-muted'), 'stroke-width': 1, 'stroke-dasharray': '3 3', visibility: 'hidden' }, svg);
+  const dots = FEE_SERIES.map(s => el('circle', { r: 5, fill: cssVar(s.color), stroke: cssVar('--surface'), 'stroke-width': 2, visibility: 'hidden' }, svg));
+  const hit = el('rect', { x: L, y: T, width: W - L - R, height: H - T - B, fill: 'transparent' }, svg);
+  const tip = document.getElementById('feeTip');
+  function move(ev) {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * (W / r.width);
+    let a = Math.round(((px - L) / (W - L - R)) * xMax / 500) * 500;
+    a = Math.max(500, Math.min(xMax, a));
+    cross.setAttribute('x1', x(a)); cross.setAttribute('x2', x(a)); cross.setAttribute('visibility', 'visible');
+    FEE_SERIES.forEach((s, i) => { dots[i].setAttribute('cx', x(a)); dots[i].setAttribute('cy', y(s.f(a))); dots[i].setAttribute('visibility', 'visible'); });
+    tip.innerHTML = `<b>会計 ${a.toLocaleString('ja-JP')}円</b>` + FEE_SERIES.map(s =>
+      `<div class="row"><span><i style="background:${cssVar(s.color)}"></i>${s.name.split('（')[0]}</span><span>${(Math.round(s.f(a) * 10) / 10).toLocaleString('ja-JP')}円</span></div>`).join('');
+    tip.style.display = 'block';
+    const box2 = document.getElementById('feeChart').getBoundingClientRect();
+    let left = ev.clientX - box2.left + 14;
+    if (left + 220 > box2.width) left = ev.clientX - box2.left - 230;
+    tip.style.left = Math.max(4, left) + 'px';
+    tip.style.top = (ev.clientY - box2.top - 20) + 'px';
+  }
+  function leave() { cross.setAttribute('visibility', 'hidden'); dots.forEach(d => d.setAttribute('visibility', 'hidden')); tip.style.display = 'none'; }
+  hit.addEventListener('pointermove', move);
+  hit.addEventListener('pointerleave', leave);
+  // 凡例
+  document.getElementById('feeLegend').innerHTML = FEE_SERIES.map(s =>
+    `<span><i class="ln" style="background:${cssVar(s.color)}"></i>${s.name}</span>`).join('');
+}
+
+// ===== 4. キャッシュレス決済額の推移（経済産業省、兆円） =====
+const YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+const CASH = [
+  { name: 'クレジットカード', color: '--s1', v: [66.7, 73.4, 74.5, 81.0, 93.8, 105.7, 116.9, 134.6] },
+  { name: 'デビットカード', color: '--s2', v: [1.3, 1.7, 2.2, 2.7, 3.2, 3.7, 4.4, 5.5] },
+  { name: '電子マネー', color: '--s3', v: [5.5, 5.8, 6.0, 6.0, 6.1, 6.4, 6.2, 6.0] },
+  { name: 'コード決済', color: '--s4', v: [0.2, 1.0, 3.2, 5.3, 7.9, 10.9, 13.5, 16.6] },
+];
+const TOTAL = [73.7, 81.9, 85.8, 95.0, 111.0, 126.7, 141.0, 162.7];
+const RATIO_DOM = [29.8, 33.4, 37.3, 40.0, 44.0, 48.4, 52.8, 58.0];
+const RATIO_INT = [24.1, 26.8, 29.7, 32.5, 36.0, 39.3, 42.8, 46.3];
+
+// 内訳の合計と、公表の合計が合うかを確かめます（転記の誤りに気づけるよう、合わなければ止めます）
+YEARS.forEach((yr, i) => {
+  const sum = CASH.reduce((s, c) => s + c.v[i], 0);
+  if (Math.abs(sum - TOTAL[i]) > 0.15) throw new Error(`${yr}年の内訳の合計 ${sum.toFixed(1)} が公表の合計 ${TOTAL[i]} と合いません`);
+});
+
+function drawCash() {
+  const box = document.getElementById('cashSvg');
+  box.innerHTML = '';
+  const W = 860, H = 340, L = 44, R = 12, T = 22, B = 30;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '手段別のキャッシュレス決済額の推移' }, box);
+  const yMax = 180;
+  const y = v => T + (1 - v / yMax) * (H - T - B);
+  for (let v = 0; v <= yMax; v += 30) {
+    el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: cssVar('--grid'), 'stroke-width': 1 }, svg);
+    el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg).textContent = v;
+  }
+  const band = (W - L - R) / YEARS.length;
+  const bw = Math.min(56, band * 0.56);
+  const tip = document.getElementById('cashTip');
+  YEARS.forEach((yr, i) => {
+    const cx = L + band * i + band / 2;
+    const g = el('g', {}, svg);
+    let acc = 0;
+    CASH.forEach((c, k) => {
+      const v = c.v[i];
+      const y0 = y(acc), y1 = y(acc + v);
+      // 区切りが見えるよう、上下に 1px ずつすき間を空けます
+      const h = Math.max(0, y0 - y1 - 2);
+      if (k === CASH.length - 1) {
+        // 一番上は角を丸めます
+        const rr = Math.min(4, h / 2);
+        const x0 = cx - bw / 2, top = y1 + 1;
+        el('path', { d: `M${x0} ${top + h} V${top + rr} Q${x0} ${top} ${x0 + rr} ${top} H${x0 + bw - rr} Q${x0 + bw} ${top} ${x0 + bw} ${top + rr} V${top + h} Z`, fill: cssVar(c.color) }, g);
+      } else {
+        el('rect', { x: cx - bw / 2, y: y1 + 1, width: bw, height: h, fill: cssVar(c.color) }, g);
+      }
+      acc += v;
+    });
+    el('text', { x: cx, y: y(TOTAL[i]) - 6, 'text-anchor': 'middle', class: 'lbl' }, svg).textContent = TOTAL[i];
+    el('text', { x: cx, y: H - 10, 'text-anchor': 'middle' }, svg).textContent = yr;
+    const hit = el('rect', { x: cx - band / 2, y: T, width: band, height: H - T - B, fill: 'transparent' }, svg);
+    hit.addEventListener('pointermove', ev => {
+      tip.innerHTML = `<b>${yr}年 合計 ${TOTAL[i]}兆円</b>` +
+        CASH.slice().reverse().map(c => `<div class="row"><span><i style="background:${cssVar(c.color)}"></i>${c.name}</span><span>${c.v[i]}兆円</span></div>`).join('') +
+        `<div class="row"><span>比率（国内指標）</span><span>${RATIO_DOM[i]}%</span></div>`;
+      tip.style.display = 'block';
+      const b2 = document.getElementById('cashChart').getBoundingClientRect();
+      let left = ev.clientX - b2.left + 14;
+      if (left + 220 > b2.width) left = ev.clientX - b2.left - 230;
+      tip.style.left = Math.max(4, left) + 'px';
+      tip.style.top = (ev.clientY - b2.top - 20) + 'px';
+      g.style.opacity = 1;
+    });
+    hit.addEventListener('pointerleave', () => { tip.style.display = 'none'; });
+  });
+  // 凡例（上から積んだ順と同じに、上の段から並べます）
+  document.getElementById('cashLegend').innerHTML = CASH.map(c =>
+    `<span><i style="background:${cssVar(c.color)}"></i>${c.name}</span>`).join('');
+}
+
+function fillCashTable() {
+  document.getElementById('cashTable').innerHTML = YEARS.map((yr, i) =>
+    `<tr><td>${yr}</td><td class="n">${TOTAL[i]}</td>${CASH.map(c => `<td class="n">${c.v[i]}</td>`).join('')}<td class="n">${RATIO_DOM[i]}%</td><td class="n">${RATIO_INT[i]}%</td></tr>`).join('');
+}
+
+function drawAll() { drawFee(); drawCash(); }
+fillCashTable();
+drawAll();
+// ライト・ダークが切り替わったら色を描き直します
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawAll);
+new MutationObserver(drawAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+</script>
+</body>
+</html>
